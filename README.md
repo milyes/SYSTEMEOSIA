@@ -1,22 +1,56 @@
-# 🛡️ SYSTEMEOSIA — Capsule CI/CD Souveraine
+# 🧠 ORBITRON_IA — Capsule Cockpit SYSTEMEOSIA
 
-**Auteur** : Zoubirou Mohammed Ilyes  
-**ORCID** : [0009-0007-7571-3178](https://orcid.org/0009-0007-7571-3178)  
-**Signature** : DZROUGE  
-**Validité** : 2025–2035  
-**Statut** : ✅ Activée et scellée
+Bienvenue dans le cockpit souverain `ORBITRON_IA`, activé par **Zoubirou Mohammed Ilyes**  
+📜 Signature : `DZROUGE` | 🔗 ORCID : `0009-0007-7571-3178`  
+🛡️ Statut : ACTIVATED | 📅 Timestamp : `2025-10-07T14:52:00Z`
 
 ---
 
-## 📜 Manifest.json
+## 🔁 Modules cockpit activés
+
+- 📂 `activated/`
+- 📡 `github_signals/`
+- 📜 `audit_ia22.log`
+- 📡 `signaux/`
+
+---
+
+## 🧪 Rituels exécutés
+
+- Audit Symbolique IA22  
+- Signal Multisite  
+- Scellage SHA256  
+- QR Manifest Integration  
+
+---
+
+## 🏅 Badge SVG
+
+![Badge ORBITRON_IA](ORBITRON_IA.svg)
+
+---
+
+## 📸 QR vers capsule visuelle
+
+![QR vers capsule](qr_orbitron.png)  
+🔗 [Accéder à la capsule cockpit](https://milyes.github.io/SYSTEMEOSIA/index_orbitron.html)
+
+---
+
+## 📜 Manifest JSON
 
 ```json
 {
-  "capsule": "SYSTEMEOSIA",
+  "module": "ORBITRON_IA",
   "author": "Zoubirou Mohammed Ilyes",
   "orcid": "0009-0007-7571-3178",
-  "timestamp": "2025-10-05T14:19:00Z",
-  "hash": "e3b0c44298fc1c149afbf4c8996fb924...",
   "signature": "DZROUGE",
-  "log": "seal_history.log"
+  "timestamp": "2025-10-07T14:52:00Z",
+  "status": "🛡️ ACTIVATED",
+  "rituals": [
+    "Audit Symbolique IA22",
+    "Signal Multisite",
+    "Scellage SHA256",
+    "QR Manifest Integration"
+  ]
 }
