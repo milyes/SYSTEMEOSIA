@@ -1,0 +1,5 @@
+import qrcode
+
+data = "Signal 6 – IA22, GitHub, TD Canada Trust – cockpit activé"
+img = qrcode.make(data)
+img.save("SIGNAL_6_QR.png")

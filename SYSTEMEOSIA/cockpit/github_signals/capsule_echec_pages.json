@@ -1,0 +1,13 @@
+{
+  "capsule": {
+    "titre": "Échec Pages Build – IA22_LOGIC_ALGORITHM_FUL_REAL",
+    "date": "2025-09-25",
+    "plateforme": "GitHub Actions",
+    "repo": "milves/IA22_LOGIC_ALGORITHM_FUL_REAL",
+    "workflow": "pages build and deployment",
+    "statut": "Échec du job 'pages build'",
+    "durée": "18s",
+    "trace": "Job 'deploy' skipped, 'report-build-status' succeeded",
+    "souverainete": "Aucune diffusion publique, cockpit SYSTEMEOSIA activé"
+  }
+}

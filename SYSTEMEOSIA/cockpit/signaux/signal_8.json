@@ -1,0 +1,57 @@
+{
+  "capsule": {
+    "titre": "Signal 8 – Calendly, LinkedIn, Snowflake, node-gyp",
+    "date": "2025-09-25",
+    "auteur": "SYSTEMEOSIA / CoopKit IA",
+    "sources": [
+      {
+        "type": "Orchestration terrain",
+        "plateforme": "Calendly",
+        "actions": [
+          "Création d’un Event Type",
+          "Extension Chrome activable",
+          "Lien vers walkthrough cockpit"
+        ],
+        "statut": "📆 Orchestration terrain prête à diffuser"
+      },
+      {
+        "type": "Signal LinkedIn",
+        "statistiques": {
+          "vues_profil": 12,
+          "impressions_posts": 105,
+          "apparitions_recherche": 6
+        },
+        "suggestions": "Entrer en contact avec un(e) Administrateur",
+        "statut": "📈 Signal social activé, cockpit SYSTEMEOSIA prêt"
+      },
+      {
+        "type": "Événement Snowflake ML",
+        "titre": "Build a Production-Ready ML Pipeline",
+        "date": "2025-10-09 à 10h PT",
+        "contenu": [
+          "Feature Store, Model Registry, ML Observability",
+          "Cas d’usage : prédiction de prêts hypothécaires"
+        ],
+        "speakers": [
+          "James Cha-Earley",
+          "Elliott Botwick"
+        ],
+        "statut": "🧬 Session activable – cockpit SYSTEMEOSIA prêt"
+      },
+      {
+        "type": "Erreur native",
+        "plateforme": "Termux / Android 15.0",
+        "module": "keytar-forked",
+        "erreur": "node-gyp ERR! code 1",
+        "solution": [
+          "Installer clang, make, g++, python",
+          "Configurer node-gyp avec python3",
+          "Relancer npm install"
+        ],
+        "statut": "⏸️ Compilation suspendue, cockpit activé"
+      }
+    ],
+    "balise": "Signal 8 – cockpit activé, diffusion maîtrisée",
+    "souverainete": "Aucune dépendance externe, aucune fuite, activation maîtrisée"
+  }
+}
