@@ -5,89 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Fiche Technique : IA22LOGICVISION</title>
 <style>
-    body {
-        font-family: 'Segoe UI', system-ui, sans-serif;
-        background-color: #121212;
-        color: #EAEAEA;
-        margin: 0;
-        padding: 2rem;
-    }
-    .container {
-        max-width: 850px;
-        margin: auto;
-        background-color: #1E1E1E;
-        border-radius: 10px;
-        padding: 2rem;
-        box-shadow: 0 0 15px rgba(0,255,200,0.1);
-    }
-    h1, h2 {
-        color: #00E6A3;
-        border-bottom: 2px solid #00E6A3;
-        padding-bottom: 8px;
-    }
-    .badge {
-        display: inline-block;
-        padding: 4px 8px;
-        background-color: #00E6A3;
-        color: #121212;
-        border-radius: 5px;
-        margin-left: 8px;
-        font-weight: bold;
-    }
-    .btn {
-        background-color: #00E6A3;
-        color: #121212;
-        border: none;
-        padding: 10px 15px;
-        border-radius: 5px;
-        cursor: pointer;
-        font-weight: bold;
-        margin: 5px 0;
-        transition: 0.3s;
-    }
-    .btn:hover { background-color: #5FFFE0; }
-    pre {
-        background-color: #2b2b2b;
-        padding: 15px;
-        border-radius: 6px;
-        font-family: 'Courier New', monospace;
-        white-space: pre-wrap;
-        word-wrap: break-word;
-    }
-    .status-box {
-        padding:10px;
-        background:#00E6A333;
-        border-left:4px solid #00E6A3;
-        margin-top:10px;
-    }
-    .modal {
-        display:none;
-        position:fixed;
-        top:0;
-        left:0;
-        width:100%;
-        height:100%;
-        background-color: rgba(0,0,0,0.7);
-        z-index:1000;
-    }
-    .modal-content {
-        background-color:#1E1E1E;
-        margin: 10% auto;
-        padding:20px;
-        width:80%;
-        border-radius:10px;
-        color:#EAEAEA;
-        position: relative;
-    }
-    .close {
-        position:absolute;
-        top:10px;
-        right:15px;
-        font-size:24px;
-        font-weight:bold;
-        cursor:pointer;
-        color:#AAA;
-    }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background:#121212; color:#EAEAEA; margin:0; padding:2rem;}
+    .container { max-width:850px; margin:auto; background:#1E1E1E; border-radius:10px; padding:2rem; box-shadow:0 0 15px rgba(0,255,200,0.1);}
+    h1,h2 { color:#00E6A3; border-bottom:2px solid #00E6A3; padding-bottom:8px;}
+    .badge { display:inline-block; padding:4px 8px; background:#00E6A3; color:#121212; border-radius:5px; margin-left:8px; font-weight:bold;}
+    .btn { background:#00E6A3; color:#121212; border:none; padding:10px 15px; border-radius:5px; cursor:pointer; font-weight:bold; margin:5px 0; transition:0.3s;}
+    .btn:hover { background:#5FFFE0;}
+    pre { background:#2b2b2b; padding:15px; border-radius:6px; font-family:'Courier New', monospace; white-space:pre-wrap; word-wrap:break-word;}
+    .status-box { padding:10px; background:#00E6A333; border-left:4px solid #00E6A3; margin-top:10px;}
+    .modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:1000;}
+    .modal-content { background:#1E1E1E; margin:10% auto; padding:20px; width:80%; border-radius:10px; color:#EAEAEA; position:relative;}
+    .close { position:absolute; top:10px; right:15px; font-size:24px; font-weight:bold; cursor:pointer; color:#AAA;}
 </style>
 </head>
 <body>
@@ -111,8 +39,7 @@
 
     <h2>Audit & Manifeste</h2>
     <button id="verify-manifest-btn" class="btn">🛡️ Voir le manifeste JSON</button>
-    <a href="seal_history.log" download class="btn">⬇️ Télécharger le Log</a>
-    <pre id="audit-log">Chargement de seal_history.log...</pre>
+    <pre id="audit-log"></pre>
 </div>
 
 <div id="manifest-modal" class="modal">
@@ -124,30 +51,38 @@
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', async () => {
+document.addEventListener('DOMContentLoaded', () => {
     const modal = document.getElementById('manifest-modal');
     const btn = document.getElementById('verify-manifest-btn');
     const span = document.getElementsByClassName('close')[0];
     const manifestEl = document.getElementById('manifest-json');
     const auditLogEl = document.getElementById('audit-log');
 
-    // Charge le manifeste JSON
-    try {
-        const manifest = await fetch('manifest.json').then(res => res.json());
-        manifestEl.textContent = JSON.stringify(manifest, null, 2);
-    } catch {
-        manifestEl.textContent = "Erreur : manifeste JSON introuvable.";
-    }
+    // --- Données intégrées offline ---
+    const manifestData = {
+        "technology": "IA22LOGICVISION",
+        "author": "Zoubirou Mohammed Ilyes",
+        "orcid": "0009-0007-7571-3178",
+        "protocol": "DZROUGE Protocol",
+        "status": "Authenticated and Sealed",
+        "hash_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "generated_at": "2025-10-08T12:00:00Z",
+        "dependencies": {
+            "deployment": "SYSTEMEOSIA",
+            "activation": "Coopkit Gemini Bridge",
+            "exposition": "FastAPI Capsule"
+        }
+    };
 
-    // Charge le log historique
-    try {
-        const logText = await fetch('seal_history.log').then(res => res.text());
-        auditLogEl.textContent = logText;
-    } catch {
-        auditLogEl.textContent = "Erreur : seal_history.log introuvable.";
-    }
+    const auditLogData = `[2025-09-05 14:00:12Z] DEPLOYMENT_VALIDATED: SYSTEMEOSIA IA22
+[2025-09-29 15:15:30Z] CAPSULE_SEALED: IA22LOGICVISION by ORCID 0009-0007-7571-3178
+[2025-09-29 15:17:05Z] PROTOCOL_ACTIVATED: DZROUGE Protocol
+[2025-10-01 09:28:00Z] MANIFEST_PUBLISHED: hash e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`;
 
-    // Gestion modal
+    manifestEl.textContent = JSON.stringify(manifestData, null, 2);
+    auditLogEl.textContent = auditLogData;
+
+    // --- Modal interactions ---
     btn.onclick = () => modal.style.display = "block";
     span.onclick = () => modal.style.display = "none";
     window.onclick = (event) => { if (event.target == modal) modal.style.display = "none"; };
