@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NetSecurePro IA - Visuel Réseaux Sociaux</title>
+<style>
+    body {
+        margin: 0;
+        font-family: 'Arial', sans-serif;
+        background: linear-gradient(135deg, #0d47a1, #1976d2);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+    .poster {
+        position: relative;
+        width: 1080px;
+        height: 1080px;
+        background: linear-gradient(145deg, #0d47a1, #2196f3);
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-around;
+        padding: 50px 30px;
+        text-align: center;
+        color: white;
+    }
+    .poster img.logo {
+        width: 200px;
+        height: auto;
+        margin-bottom: 20px;
+    }
+    .poster h1 {
+        font-size: 4em;
+        margin: 0;
+        text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
+    }
+    .poster h2 {
+        font-size: 1.8em;
+        font-weight: normal;
+        color: #ffc107;
+        margin: 10px 0 30px 0;
+        text-shadow: 1px 1px 5px rgba(0,0,0,0.4);
+    }
+    .qr-code img {
+        width: 250px;
+        height: 250px;
+        border: 5px solid #ffc107;
+        border-radius: 20px;
+        background: white;
+        padding: 10px;
+    }
+    .author {
+        font-size: 1em;
+        color: #ffeb3b;
+        margin-top: 20px;
+    }
+    @media (max-width: 1200px) {
+        .poster {
+            width: 90%;
+            height: auto;
+            padding: 40px 20px;
+        }
+        .poster h1 {
+            font-size: 3em;
+        }
+        .poster h2 {
+            font-size: 1.5em;
+        }
+        .qr-code img {
+            width: 200px;
+            height: 200px;
+        }
+    }
+</style>
+</head>
+<body>
+
+<div class="poster">
+    <img src="logo_netsecurepro.png" alt="Logo NetSecurePro" class="logo">
+    <h1>NetSecurePro IA</h1>
+    <h2>Fiche Officielle & Visuel Promotionnel</h2>
+
+    <div class="qr-code">
+        <img src="qr_netsecurepro_download.png" alt="QR Code de téléchargement">
+        <p>Scannez pour télécharger</p>
+    </div>
+
+    <p class="author">Auteur : Zoubirou Mohammed Ilyes | <a href="https://orcid.org/0009-0007-7571-3178" target="_blank" style="color:#ffc107;">ORCID</a></p>
+</div>
+
+</body>
+</html>
