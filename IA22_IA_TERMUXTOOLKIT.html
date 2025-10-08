@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>IA22_IA_TERMUXTOOLKIT</title>
+  <title>IA22_TUNNEL Terminal</title>
   <style>
     body {
       font-family: 'Courier New', monospace;
@@ -17,10 +17,27 @@
       border-radius: 8px;
       box-shadow: 0 0 10px #00ff99;
     }
-    .command, .manual-input {
-      color: #ffffff;
+    input[type="text"] {
+      width: 100%;
+      padding: 0.5em;
+      background-color: #0f0f0f;
+      color: #00ff99;
+      border: 1px solid #00ff99;
+      border-radius: 4px;
+      font-family: 'Courier New', monospace;
+    }
+    button {
+      background-color: #00ff99;
+      color: #0f0f0f;
+      border: none;
+      padding: 0.5em 1em;
       font-weight: bold;
-      margin-bottom: 1em;
+      cursor: pointer;
+      border-radius: 4px;
+      margin-top: 1em;
+    }
+    button:hover {
+      background-color: #00cc77;
     }
     .status {
       margin-top: 1em;
@@ -32,9 +49,44 @@
       font-size: 0.9em;
       color: #cccccc;
     }
-    input[type="text"] {
-      width: 100%;
-      padding: 0.5em;
+  </style>
+</head>
+<body>
+
+  <h1>🛠️ IA22_TUNNEL Terminal</h1>
+
+  <div class="terminal">
+    <input type="text" id="commandInput" placeholder="Entrez une commande IA22 ici…">
+    <button onclick="executeCommand()">Exécuter</button>
+
+    <div class="status" id="statusBlock">
+      <p>🕒 En attente d'exécution...</p>
+      <p class="timestamp">Horodatage : <span id="timestamp"></span></p>
+    </div>
+  </div>
+
+  <script>
+    function executeCommand() {
+      const cmd = document.getElementById('commandInput').value.trim();
+      const status = document.getElementById('statusBlock');
+      const timestamp = document.getElementById('timestamp');
+      const now = new Date().toLocaleString();
+      timestamp.textContent = now;
+
+      if (cmd === "") {
+        status.innerHTML = `<p>⚠️ Veuillez entrer une commande valide.</p><p class="timestamp">Horodatage : ${now}</p>`;
+      } else {
+        status.innerHTML = `
+          <p>✅ Commande IA22 simulée :</p>
+          <p><code>${cmd}</code></p>
+          <p class="timestamp">Horodatage : ${now}</p>
+        `;
+      }
+    }
+  </script>
+
+</body>
+</html>      padding: 0.5em;
       background-color: #0f0f0f;
       color: #00ff99;
       border: 1px solid #00ff99;
