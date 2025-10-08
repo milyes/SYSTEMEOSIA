@@ -3,95 +3,155 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NetSecurePro IA - Visuel Réseaux Sociaux</title>
+<title>Fiche Technique : IA22LOGICVISION</title>
 <style>
     body {
+        font-family: 'Segoe UI', system-ui, sans-serif;
+        background-color: #121212;
+        color: #EAEAEA;
         margin: 0;
-        font-family: 'Arial', sans-serif;
-        background: linear-gradient(135deg, #0d47a1, #1976d2);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
+        padding: 2rem;
     }
-    .poster {
+    .container {
+        max-width: 850px;
+        margin: auto;
+        background-color: #1E1E1E;
+        border-radius: 10px;
+        padding: 2rem;
+        box-shadow: 0 0 15px rgba(0,255,200,0.1);
+    }
+    h1, h2 {
+        color: #00E6A3;
+        border-bottom: 2px solid #00E6A3;
+        padding-bottom: 8px;
+    }
+    .badge {
+        display: inline-block;
+        padding: 4px 8px;
+        background-color: #00E6A3;
+        color: #121212;
+        border-radius: 5px;
+        margin-left: 8px;
+        font-weight: bold;
+    }
+    .btn {
+        background-color: #00E6A3;
+        color: #121212;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: bold;
+        margin: 5px 0;
+        transition: 0.3s;
+    }
+    .btn:hover { background-color: #5FFFE0; }
+    pre {
+        background-color: #2b2b2b;
+        padding: 15px;
+        border-radius: 6px;
+        font-family: 'Courier New', monospace;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+    }
+    .status-box {
+        padding:10px;
+        background:#00E6A333;
+        border-left:4px solid #00E6A3;
+        margin-top:10px;
+    }
+    .modal {
+        display:none;
+        position:fixed;
+        top:0;
+        left:0;
+        width:100%;
+        height:100%;
+        background-color: rgba(0,0,0,0.7);
+        z-index:1000;
+    }
+    .modal-content {
+        background-color:#1E1E1E;
+        margin: 10% auto;
+        padding:20px;
+        width:80%;
+        border-radius:10px;
+        color:#EAEAEA;
         position: relative;
-        width: 1080px;
-        height: 1080px;
-        background: linear-gradient(145deg, #0d47a1, #2196f3);
-        border-radius: 20px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: space-around;
-        padding: 50px 30px;
-        text-align: center;
-        color: white;
     }
-    .poster img.logo {
-        width: 200px;
-        height: auto;
-        margin-bottom: 20px;
-    }
-    .poster h1 {
-        font-size: 4em;
-        margin: 0;
-        text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
-    }
-    .poster h2 {
-        font-size: 1.8em;
-        font-weight: normal;
-        color: #ffc107;
-        margin: 10px 0 30px 0;
-        text-shadow: 1px 1px 5px rgba(0,0,0,0.4);
-    }
-    .qr-code img {
-        width: 250px;
-        height: 250px;
-        border: 5px solid #ffc107;
-        border-radius: 20px;
-        background: white;
-        padding: 10px;
-    }
-    .author {
-        font-size: 1em;
-        color: #ffeb3b;
-        margin-top: 20px;
-    }
-    @media (max-width: 1200px) {
-        .poster {
-            width: 90%;
-            height: auto;
-            padding: 40px 20px;
-        }
-        .poster h1 {
-            font-size: 3em;
-        }
-        .poster h2 {
-            font-size: 1.5em;
-        }
-        .qr-code img {
-            width: 200px;
-            height: 200px;
-        }
+    .close {
+        position:absolute;
+        top:10px;
+        right:15px;
+        font-size:24px;
+        font-weight:bold;
+        cursor:pointer;
+        color:#AAA;
     }
 </style>
 </head>
 <body>
-
-<div class="poster">
-    <img src="logo_netsecurepro.png" alt="Logo NetSecurePro" class="logo">
-    <h1>NetSecurePro IA</h1>
-    <h2>Fiche Officielle & Visuel Promotionnel</h2>
-
-    <div class="qr-code">
-        <img src="qr_netsecurepro_download.png" alt="QR Code de téléchargement">
-        <p>Scannez pour télécharger</p>
+<div class="container">
+    <h1>Fiche Technique <span class="badge">IA22LOGICVISION</span></h1>
+    <p><strong>Auteur :</strong> Zoubirou Mohammed Ilyes
+        <a href="https://orcid.org/0009-0007-7571-3178" target="_blank">
+            <img src="https://info.orcid.org/wp-content/uploads/2019/11/orcid_16x16.png" alt="ORCID" style="vertical-align:middle;">
+        </a>
+    </p>
+    <div class="status-box">
+        <strong>Statut :</strong> Capsule active et vérifiée via protocole DZROUGE
     </div>
 
-    <p class="author">Auteur : Zoubirou Mohammed Ilyes | <a href="https://orcid.org/0009-0007-7571-3178" target="_blank" style="color:#ffc107;">ORCID</a></p>
+    <h2>Composants Techniques</h2>
+    <ul>
+        <li><strong>Déploiement :</strong> SYSTEMEOSIA</li>
+        <li><strong>Activation :</strong> Coopkit Gemini Bridge</li>
+        <li><strong>Exposition :</strong> FastAPI Capsule</li>
+    </ul>
+
+    <h2>Audit & Manifeste</h2>
+    <button id="verify-manifest-btn" class="btn">🛡️ Voir le manifeste JSON</button>
+    <a href="seal_history.log" download class="btn">⬇️ Télécharger le Log</a>
+    <pre id="audit-log">Chargement de seal_history.log...</pre>
 </div>
 
+<div id="manifest-modal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Manifeste JSON</h2>
+        <pre id="manifest-json"></pre>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+    const modal = document.getElementById('manifest-modal');
+    const btn = document.getElementById('verify-manifest-btn');
+    const span = document.getElementsByClassName('close')[0];
+    const manifestEl = document.getElementById('manifest-json');
+    const auditLogEl = document.getElementById('audit-log');
+
+    // Charge le manifeste JSON
+    try {
+        const manifest = await fetch('manifest.json').then(res => res.json());
+        manifestEl.textContent = JSON.stringify(manifest, null, 2);
+    } catch {
+        manifestEl.textContent = "Erreur : manifeste JSON introuvable.";
+    }
+
+    // Charge le log historique
+    try {
+        const logText = await fetch('seal_history.log').then(res => res.text());
+        auditLogEl.textContent = logText;
+    } catch {
+        auditLogEl.textContent = "Erreur : seal_history.log introuvable.";
+    }
+
+    // Gestion modal
+    btn.onclick = () => modal.style.display = "block";
+    span.onclick = () => modal.style.display = "none";
+    window.onclick = (event) => { if (event.target == modal) modal.style.display = "none"; };
+});
+</script>
 </body>
 </html>
