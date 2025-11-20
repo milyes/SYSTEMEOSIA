@@ -1,0 +1,191 @@
+<!doctype html>
+
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>OMNIA SEALED — Page de publication officielle</title>
+  <style>
+    :root{--bg:#0f1724;--card:#0b1220;--accent:#00d1b2;--muted:#9aa4b2;color-scheme:dark}
+    body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial;margin:0;background:linear-gradient(180deg,#071022 0%,#081827 60%);color:#e6eef6}
+    .wrap{max-width:980px;margin:28px auto;padding:20px}
+    header{display:flex;align-items:center;gap:16px}
+    .logo{width:72px;height:72px;border-radius:12px;background:linear-gradient(135deg,#042b3a,#003e2f);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--accent)}
+    h1{margin:0;font-size:20px}
+    p.lead{margin-top:6px;color:var(--muted)}
+    .grid{display:grid;grid-template-columns:1fr 380px;gap:20px;margin-top:18px}
+    .card{background:rgba(255,255,255,0.02);border-radius:12px;padding:16px;box-shadow:0 6px 18px rgba(2,6,23,0.6)}
+    label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px}
+    input[type=text],input[type=url],textarea,select{width:100%;padding:8px 10px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit;font-size:14px}
+    button{background:var(--accent);border:none;color:#03211b;padding:8px 12px;border-radius:10px;cursor:pointer;font-weight:600}
+    .muted{color:var(--muted);font-size:13px}
+    pre{overflow:auto;background:rgba(0,0,0,0.15);padding:10px;border-radius:8px}
+    .ok{color:#7ef3c1} .err{color:#ff9aa2}
+    .list{display:flex;flex-direction:column;gap:8px}
+    .file-row{display:flex;gap:8px;align-items:center}
+    footer{margin-top:18px;color:var(--muted);font-size:13px}
+    .small{font-size:13px}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="logo">OM</div>
+      <div>
+        <h1>OMNIA SEALED — Publication Officielle</h1>
+        <p class="lead">Page d'édition et d'outil de vérification client pour OMNIA_SEALED — vérifiez les manifests, hashes et signatures Ed25519 (IA22).</p>
+      </div>
+    </header><div class="grid">
+  <div class="card">
+    <h3>1. Manifest / Release</h3>
+    <label>URL du manifeste (<code>update.json</code>)</label>
+    <input id="manifestUrl" type="url" placeholder="https://your.sovereign.server/releases/v1.0/update.json" />
+    <div style="margin-top:8px;display:flex;gap:8px;">
+      <button id="fetchManifest">Télécharger & Vérifier</button>
+      <button id="parseManifest">Parser manifest local</button>
+    </div>
+
+    <div style="margin-top:12px">
+      <label>Manifeste (JSON)</label>
+      <textarea id="manifestContent" rows="8" placeholder="Le manifeste JSON s'affichera ici..."></textarea>
+    </div>
+
+    <hr style="margin:14px 0;border:none;border-top:1px solid rgba(255,255,255,0.03)" />
+
+    <h3>2. Vérification locale</h3>
+    <label>Clé publique Ed25519 (Base64 raw 32 bytes)</label>
+    <input id="pubKey" type="text" placeholder="Coller la clé publique IA22 en Base64 (32 bytes)" />
+
+    <label style="margin-top:10px">Fichier à vérifier</label>
+    <input id="fileInput" type="file" />
+    <label style="margin-top:8px">Signature détachée (.sig)</label>
+    <input id="sigInput" type="file" />
+
+    <div style="margin-top:10px;display:flex;gap:8px;align-items:center">
+      <button id="verifyBtn">Vérifier signature Ed25519</button>
+      <div id="verifyResult" class="muted small"></div>
+    </div>
+
+    <hr style="margin:14px 0;border:none;border-top:1px solid rgba(255,255,255,0.03)" />
+
+    <h3>3. Vérifiez SHA‑512</h3>
+    <div class="small muted">Calculez le SHA‑512 d'un fichier et comparez au manifeste.</div>
+    <div style="margin-top:8px;display:flex;gap:8px">
+      <button id="computeHash">Calculer SHA‑512</button>
+      <div id="hashResult" class="muted small"></div>
+    </div>
+
+    <hr style="margin:14px 0;border:none;border-top:1px solid rgba(255,255,255,0.03)" />
+
+    <h3>4. Outils rapides</h3>
+    <div class="list">
+      <div class="file-row"><button id="downloadZip">Télécharger OMNIA_SEALED_FINAL.zip</button><span class="muted">(si accessible depuis manifest)</span></div>
+      <div class="file-row"><button id="showPubKeySample">Exemple clé publique IA22</button></div>
+    </div>
+
+  </div>
+
+  <div class="card">
+    <h3>Etat & Journal</h3>
+    <pre id="log" style="height:520px">Prêt. Instructions:
+
+1. Fournissez l'URL du manifest.
+
+
+2. Collez la clé publique IA22 en Base64 (raw 32 bytes).
+
+
+3. Téléchargez fichier + signature puis vérifiez.
+
+
+
+Les opérations de vérification sont réalisées côté client (navigateur).</pre> </div> </div>
+
+<footer class="card" style="margin-top:18px">
+  <strong>Notes d'usage :</strong>
+  <ul>
+    <li class="muted">Collez la clé publique IA22 au format Base64 de 32 octets (ou convertissez PEM -> raw via openssl sur votre poste : <code>openssl pkey -pubin -in ia22_public.pem -outform DER | tail -c 32 | base64</code>).</li>
+    <li class="muted">La vérification Ed25519 se fait avec <code>tweetnacl.js</code> (inclus).</li>
+    <li class="muted">Le calcul SHA‑512 utilise l'API WebCrypto.</li>
+  </ul>
+</footer>
+
+  </div>  <script src="https://cdnjs.cloudflare.com/ajax/libs/tweetnacl/1.0.3/nacl.min.js"></script>  <script src="https://cdnjs.cloudflare.com/ajax/libs/tweetnacl-util/0.15.1/nacl-util.min.js"></script>  <script>
+    const log = (s) => {
+      const el = document.getElementById('log');
+      el.textContent = new Date().toISOString() + '  ' + s + '\n' + el.textContent;
+    }
+
+    async function fetchText(url){
+      const r = await fetch(url,{cache:'no-store'});
+      if(!r.ok) throw new Error('HTTP '+r.status);
+      return await r.text();
+    }
+
+    document.getElementById('fetchManifest').addEventListener('click', async ()=>{
+      const url = document.getElementById('manifestUrl').value.trim();
+      if(!url){alert('Entrez l\'URL du manifeste');return}
+      try{
+        log('Téléchargement manifeste... '+url);
+        const txt = await fetchText(url);
+        document.getElementById('manifestContent').value = txt;
+        log('Manifeste téléchargé.');
+      }catch(e){log('Erreur fetch manifest: '+e);alert('Erreur: '+e)}
+    });
+
+    document.getElementById('parseManifest').addEventListener('click', ()=>{
+      try{
+        const v = document.getElementById('manifestContent').value.trim();
+        if(!v) {alert('Aucun manifeste présent');return}
+        const j = JSON.parse(v);
+        log('Manifest parsed: version='+ (j.version||'n/a') + ' payload_url=' + (j.payload_url||'n/a'));
+        alert('Manifest parsed: version='+(j.version||'n/a')+'\npayload_url='+(j.payload_url||'n/a'));
+      }catch(e){alert('JSON invalide: '+e)}
+    });
+
+    document.getElementById('showPubKeySample').addEventListener('click', ()=>{
+      const sample = 'Base64(32 bytes) example: ' + btoa('\x00'.repeat(32)).slice(0,44);
+      alert(sample+'\nConvertissez PEM->raw si besoin (voir footer).');
+    });
+
+    document.getElementById('verifyBtn').addEventListener('click', async ()=>{
+      const pub = document.getElementById('pubKey').value.trim();
+      const f = document.getElementById('fileInput').files[0];
+      const s = document.getElementById('sigInput').files[0];
+      if(!pub || !f || !s){alert('Clé publique + fichier + signature requis');return}
+      try{
+        log('Lecture fichiers...');
+        const fileBuf = new Uint8Array(await f.arrayBuffer());
+        const sigBuf = new Uint8Array(await s.arrayBuffer());
+        // pub expected as base64
+        let pubRaw;
+        try{pubRaw = nacl.util.decodeBase64(pub)}catch(e){alert('Clé publique: format Base64 attendu');return}
+        const ok = nacl.sign.detached.verify(fileBuf, sigBuf, pubRaw);
+        const el = document.getElementById('verifyResult');
+        if(ok){el.textContent='✔️ Signature valide';el.className='ok';log('Signature valide pour '+f.name)}
+        else{el.textContent='❌ Signature invalide';el.className='err';log('Signature invalide pour '+f.name)}
+      }catch(e){log('Erreur vérif: '+e);alert('Erreur: '+e)}
+    });
+
+    document.getElementById('computeHash').addEventListener('click', async ()=>{
+      const f = document.getElementById('fileInput').files[0];
+      if(!f){alert('Sélectionnez un fichier');return}
+      log('Calcul SHA-512 pour '+f.name);
+      const buf = await f.arrayBuffer();
+      const hashBuf = await crypto.subtle.digest('SHA-512', buf);
+      const hex = Array.from(new Uint8Array(hashBuf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+      document.getElementById('hashResult').textContent = hex;
+      log('SHA-512: '+hex);
+    });
+
+    document.getElementById('downloadZip').addEventListener('click', ()=>{
+      try{
+        const txt = document.getElementById('manifestContent').value.trim();
+        if(!txt) {alert('Manifeste non chargé');return}
+        const j = JSON.parse(txt);
+        if(!j.payload_url){alert('Le manifeste ne contient pas payload_url');return}
+        window.open(j.payload_url,'_blank');
+      }catch(e){alert('Erreur: '+e)}
+    });
+  </script></body>
+</html>
