@@ -303,5 +303,274 @@ Tapez 'help' pour commencer...
     `);
   </script>
 </body>
+</html>    @keyframes blink { 50% { opacity: 0; } }
+    @keyframes glitch {
+      0%,100% { transform: translate(0); }
+      20%  { transform: translate(-1.5px, 1.5px); }
+      40%  { transform: translate(1.5px, -1.5px); }
+    }
+    #input-line {
+      display: flex;
+      align-items: center;
+      font-size: 1.35rem;
+      pointer-events: auto;
+    }
+    #input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: #0ff;
+      font: inherit;
+      outline: none;
+      caret-color: #0ff;
+    }
+    canvas {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- WebGL Canvas -->
+  <canvas id="bg-canvas"></canvas>
+
+  <div id="terminal-container">
+    <div id="terminal"></div>
+
+    <div id="input-line">
+      <span class="prompt">dz@neo:/$ </span>
+      <input id="input" type="text" autocomplete="off" autofocus spellcheck="false"/>
+    </div>
+  </div>
+
+  <!-- Three.js + modules via CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/three@0.168.0/build/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.168.0/examples/js/controls/OrbitControls.min.js"></script>
+
+  <script>
+    // ────────────────────────────────
+    //        WebGL Background 3D
+    // ────────────────────────────────
+    const canvas = document.getElementById('bg-canvas');
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x000000);
+
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 3000);
+    camera.position.z = 35;
+
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(window.devicePixelRatio);
+
+    // Grille cyber 3D
+    const gridHelper = new THREE.GridHelper(200, 60, 0x003300, 0x004400);
+    scene.add(gridHelper);
+
+    // Lignes tombantes Matrix-like
+    const linesGroup = new THREE.Group();
+    for (let i = 0; i < 80; i++) {
+      const points = [];
+      for (let j = 0; j < 25; j++) {
+        points.push(new THREE.Vector3(
+          (Math.random() - 0.5) * 120,
+          j * -5 - Math.random() * 30,
+          (Math.random() - 0.5) * 120
+        ));
+      }
+      const geometry = new THREE.BufferGeometry().setFromPoints(points);
+      const material = new THREE.LineBasicMaterial({
+        color: 0x00ff44,
+        transparent: true,
+        opacity: 0.25 + Math.random() * 0.4
+      });
+      const line = new THREE.Line(geometry, material);
+      line.position.y = Math.random() * 100;
+      linesGroup.add(line);
+    }
+    scene.add(linesGroup);
+
+    // Particules flottantes
+    const particlesGeometry = new THREE.BufferGeometry();
+    const particlesCount = 1200;
+    const posArray = new Float32Array(particlesCount * 3);
+    for(let i = 0; i < particlesCount * 3; i++) {
+      posArray[i] = (Math.random() - 0.5) * 180;
+    }
+    particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+    const particlesMaterial = new THREE.PointsMaterial({
+      size: 0.3,
+      color: 0x00ff88,
+      transparent: true,
+      opacity: 0.7
+    });
+    const particles = new THREE.Points(particlesGeometry, particlesMaterial);
+    scene.add(particles);
+
+    // Animation loop
+    function animate() {
+      requestAnimationFrame(animate);
+
+      // Rotation lente de la grille
+      gridHelper.rotation.x += 0.0003;
+      gridHelper.rotation.y += 0.0004;
+
+      // Déplacement des lignes Matrix
+      linesGroup.children.forEach(line => {
+        line.position.y += 0.12 + Math.random() * 0.08;
+        if (line.position.y > 100) line.position.y = -100;
+      });
+
+      // Rotation particules
+      particles.rotation.y += 0.0004;
+
+      renderer.render(scene, camera);
+    }
+    animate();
+
+    // Resize
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    // ────────────────────────────────
+    //         Terminal Logic
+    // ────────────────────────────────
+    const terminal = document.getElementById('terminal');
+    const input = document.getElementById('input');
+
+    let history = [];
+    let historyIndex = -1;
+
+    const commands = {
+      help: () => `
+COMMANDES DISPONIBLES :
+  help     : cette aide
+  status   : état du système
+  doc      : documentation SYSTEMEOSIA
+  version  : version du core
+  clear    : effacer l'écran
+  whoami   : identité actuelle
+  neuro    : [RESTRICTED] NeuroSenseGuard
+      `,
+
+      status: () => `
+GEMINI CORE 20.6 PRO V7 – STATUT
+───────────────────────────────
+Pipeline CI/CD     : 100% VALIDÉ
+Signal Quality     : 98.4%
+Anomalie           : AUCUNE
+IA22 Status        : OPTIMAL
+Handler Éthique    : ACTIF
+Sceau Souverain    : VALIDÉ
+      `,
+
+      doc: () => `
+SYSTEMEOSIA – EXCERPT OFFICIEL
+───────────────────────────────
+Auteur    : ZOUBIROU Mohammed Ilyes
+ORCID     : 0009-0007-7571-3178
+Objectif  : Souveraineté & Éthique IA
+Slogan    : Souveraineté. Traçabilité. Action.
+      `,
+
+      version: () => "GEMINI CORE 20.6 PRO V7 – ACTIVATED 2025-10-07",
+
+      whoami: () => `
+IDENTITÉ ACTUELLE :
+Admin     : ZOUBIROU Mohammed Ilyes
+ORCID     : 0009-0007-7571-3178
+Rôle      : ROOT_SOVEREIGN
+      `,
+
+      neuro: () => `
+[ACCÈS RESTREINT – NIVEAU 3]
+NeuroSenseGuard
+───────────────────────────────
+Validation physique requise
+Scanner QR Gravure 3D #021
+Signal : 98% | Anomalie : AUCUNE
+      `,
+
+      clear: () => { terminal.innerHTML = ''; return ''; }
+    };
+
+    function typeText(text, callback) {
+      let i = 0;
+      const interval = setInterval(() => {
+        if (i < text.length) {
+          terminal.innerHTML += text[i];
+          terminal.scrollTop = terminal.scrollHeight;
+          i++;
+        } else {
+          clearInterval(interval);
+          callback?.();
+        }
+      }, 32);
+    }
+
+    function executeCommand(cmd) {
+      if (!cmd) return;
+      history.push(cmd);
+      historyIndex = history.length;
+
+      const line = document.createElement('div');
+      line.innerHTML = `<span class="prompt">dz@neo:/$ </span>${cmd}`;
+      terminal.appendChild(line);
+
+      if (commands[cmd]) {
+        typeText(commands[cmd]() + '\n\n');
+      } else {
+        typeText(`command not found: ${cmd}\n\n`);
+      }
+    }
+
+    input.addEventListener('keydown', e => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        const cmd = input.value.trim();
+        executeCommand(cmd);
+        input.value = '';
+      }
+      else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        if (historyIndex > 0) {
+          historyIndex--;
+          input.value = history[historyIndex];
+        }
+      }
+      else if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        if (historyIndex < history.length - 1) {
+          historyIndex++;
+          input.value = history[historyIndex];
+        } else {
+          historyIndex = history.length;
+          input.value = '';
+        }
+      }
+    });
+
+    input.focus();
+
+    // Séquence de boot immersive
+    typeText(`
+[INIT] Chargement noyau NetSecurePro...
+[CHECK] Validation identité admin : ZOUBIROU Mohammed Ilyes
+[AUTH] Sceau souverain : 0009-0007-7571-3178
+[CORE] Montage GEMINI CORE 20.6 PRO V7...
+[ETHICS] Handler V1.1 ACTIVÉ – Hash validé
+
+Bienvenue dans le Terminal NÉO-DZ
+Souveraineté. Traçabilité. Action.
+
+Tapez 'help' pour commencer...
+
+    `);
+  </script>
+</body>
 </html>
 
