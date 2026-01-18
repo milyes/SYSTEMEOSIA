@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NÉO_DZ Terminal | GEMINI CORE V7</title>
+    <style>
+        /* --- CORE VISUALS --- */
+        :root {
+            --bg-color: #050505;
+            --term-color: #00ffcc; /* Cyan Neo-Tech */
+            --term-dim: #005f4c;
+            --alert-color: #ff3333;
+            --font-stack: 'Courier New', Courier, monospace;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--term-color);
+            font-family: var(--font-stack);
+            margin: 0;
+            padding: 20px;
+            height: 100vh;
+            box-sizing: border-box;
+            overflow: hidden; /* Scroll géré par le terminal */
+            text-shadow: 0 0 2px var(--term-dim);
+        }
+
+        /* Effet CRT / Scanline subtil */
+        body::before {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 2;
+            background-size: 100% 2px, 3px 100%;
+            pointer-events: none;
+        }
+
+        #terminal-container {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            z-index: 1;
+        }
+
+        #output {
+            flex-grow: 1;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            margin-bottom: 10px;
+            scrollbar-width: none; /* Firefox */
+        }
+        #output::-webkit-scrollbar { display: none; } /* Chrome */
+
+        .log-line { margin-bottom: 4px; line-height: 1.4; }
+        .success { color: #00ff00; }
+        .warning { color: #ffff00; }
+        .error { color: var(--alert-color); }
+        .info { color: #aaa; }
+        .cmd-echo { color: #fff; font-weight: bold; opacity: 0.8; }
+
+        /* Input Area */
+        #input-area {
+            display: flex;
+            align-items: center;
+            background: rgba(0, 255, 204, 0.05);
+            padding: 5px;
+            border-top: 1px solid var(--term-dim);
+        }
+
+        .prompt {
+            color: var(--term-color);
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        #cmd-input {
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-family: var(--font-stack);
+            font-size: 16px;
+            flex-grow: 1;
+            outline: none;
+            caret-color: var(--term-color);
+        }
+
+        /* Cursor blinking animation if needed, but input caret is usually enough */
+        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0; } 100% { opacity: 1; } }
+    </style>
+</head>
+<body>
+
+<div id="terminal-container">
+    <div id="output"></div>
+    <div id="input-area">
+        <span class="prompt">dz@neo:/$</span>
+        <input type="text" id="cmd-input" autocomplete="off" autofocus spellcheck="false">
+    </div>
+</div>
+
+<script>
+    /**
+     * NÉO_DZ TERMINAL - GEMINI CORE 20.6 PRO V7
+     * Admin: Zoubirou Mohammed Ilyes
+     * Handler Hash: 7f8a9b8c7d6e5f4a1d2c3b4a5b2c1d6e
+     */
+
+    const output = document.getElementById('output');
+    const input = document.getElementById('cmd-input');
+    const container = document.getElementById('terminal-container');
+
+    let history = [];
+    let historyIndex = -1;
+
+    // --- SYSTEM DATA ---
+    const SYS_DATA = {
+        version: "GEMINI CORE 20.6 PRO V7",
+        admin: "Zoubirou Mohammed Ilyes",
+        orcid: "0009-0007-7571-3178",
+        hash: "7f8a9b8c7d6e5f4a1d2c3b4a5b2c1d6e",
+        status: "OPERATIONAL / SECURE",
+        ipi_leak: "0% (Certified)"
+    };
+
+    // --- UTILS ---
+    function print(text, type = '') {
+        const line = document.createElement('div');
+        line.className = 'log-line ' + type;
+        line.innerHTML = text; // innerHTML allowed for bold/color tags
+        output.appendChild(line);
+        output.scrollTop = output.scrollHeight;
+    }
+
+    function typeWriter(text, type = '', speed = 20, callback = null) {
+        const line = document.createElement('div');
+        line.className = 'log-line ' + type;
+        output.appendChild(line);
+        
+        let i = 0;
+        const timer = setInterval(() => {
+            line.innerHTML += text.charAt(i);
+            output.scrollTop = output.scrollHeight;
+            i++;
+            if (i >= text.length) {
+                clearInterval(timer);
+                if (callback) callback();
+            }
+        }, speed);
+    }
+
+    // --- BOOT SEQUENCE ---
+    function bootSequence() {
+        input.disabled = true;
+        setTimeout(() => print(`[INIT] Loading NetSecurePro Kernel...`), 100);
+        setTimeout(() => print(`[CHECK] Validating Admin Identity: <b>${SYS_DATA.admin}</b>`, 'success'), 600);
+        setTimeout(() => print(`[AUTH] Sceau Souverain: ${SYS_DATA.orcid}`, 'info'), 1200);
+        setTimeout(() => print(`[CORE] Mounting GEMINI CORE 20.6 PRO V7...`), 2000);
+        setTimeout(() => print(`[ETHICS] Handler V1.1 Activated. Hash: <span style="font-size:0.9em">${SYS_DATA.hash}</span>`, 'warning'), 2800);
+        setTimeout(() => {
+            print(`<br>Welcome to NÉO_DZ Terminal.`, 'success');
+            print(`Souveraineté. Traçabilité. Action.<br>`);
+            print(`Type 'help' for available commands.<br>`, 'info');
+            input.disabled = false;
+            input.focus();
+        }, 3500);
+    }
+
+    // --- COMMAND LOGIC ---
+    const commands = {
+        'help': () => {
+            print(`
+ AVAILABLE COMMANDS:
+ -------------------
+  help      : Show this list
+  status    : System diagnostics & integrity check
+  doc       : Project documentation (SYSTEMEOSIA)
+  version   : Core kernel info
+  clear     : Clear terminal screen
+  whoami    : Display current user session
+  neuro     : [RESTRICTED] NeuroSenseGuard status
+            `);
+        },
+        'status': () => {
+            print(`
+ SYSTEM STATUS REPORT
+ ====================
+ [OK] Pipeline CI/CD V7 ..... ACTIVE
+ [OK] Neural Link ........... STABLE (98%)
+ [OK] IPI Leak Protection ... 100%
+ [OK] Ethics Handler ........ LOCKED (${SYS_DATA.hash})
+ 
+ Global State: ${SYS_DATA.status}
+            `, 'success');
+        },
+        'doc': () => {
+            print(`
+ DOCUMENTATION EXCERPT
+ ---------------------
+ Project: SYSTEMEOSIA / NÉO_DZ
+ Goal: IA Souveraine & Éthique (Canada/France/Algérie)
+ Stack: Vanilla JS / Python / Local Host
+ 
+ "L'IA ne doit pas être une boîte noire."
+            `, 'info');
+        },
+        'version': () => print(`Kernel: ${SYS_DATA.version}<br>Build: 2025-10-07-RELEASE`),
+        'whoami': () => print(`User: <b>${SYS_DATA.admin}</b> [ROOT ACCESS]`),
+        'clear': () => output.innerHTML = '',
+        'exit': () => {
+            print(`Shutting down session...`, 'error');
+            setTimeout(() => {
+                output.innerHTML = '';
+                print(`[SYSTEM HALTED] It is now safe to turn off your computer.`);
+                input.style.display = 'none';
+                document.querySelector('.prompt').style.display = 'none';
+            }, 1500);
+        },
+        'neuro': () => {
+             typeWriter(`[ACCESSING NEUROSENSEGUARD]... Module en cours de déploiement (Phase 3). Analyse prédictive non disponible pour le moment.`, 'warning');
+        }
+    };
+
+    // --- EVENT LISTENERS ---
+    input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            const cmd = input.value.trim().toLowerCase();
+            if (cmd) {
+                history.push(input.value); // Store original case
+                historyIndex = history.length;
+                
+                print(`<span class="prompt">dz@neo:/$</span> ${input.value}`, 'cmd-echo');
+                
+                if (commands[cmd]) {
+                    commands[cmd]();
+                } else {
+                    print(`bash: ${cmd}: command not found`, 'error');
+                }
+            }
+            input.value = '';
+        } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            if (historyIndex > 0) {
+                historyIndex--;
+                input.value = history[historyIndex];
+            }
+        } else if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            if (historyIndex < history.length - 1) {
+                historyIndex++;
+                input.value = history[historyIndex];
+            } else {
+                historyIndex = history.length;
+                input.value = '';
+            }
+        }
+    });
+
+    // Force focus
+    document.addEventListener('click', () => {
+        if(input.style.display !== 'none') input.focus();
+    });
+
+    // START
+    window.onload = bootSequence;
+
+</script>
+</body>
+</html>
