@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Binary Options Simulator – Démo</title>
+  <style>
+    :root {
+      --up: #00cc44;
+      --down: #ff4444;
+      --bg: #0d1117;
+      --card: #161b22;
+      --text: #c9d1d9;
+      --border: #30363d;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    h1 {
+      color: #58a6ff;
+      margin-bottom: 8px;
+    }
+
+    .stats {
+      display: flex;
+      gap: 30px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 25px;
+      font-size: 1.1rem;
+    }
+
+    .stat {
+      background: var(--card);
+      padding: 12px 24px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+
+    .balance { color: #ffd700; font-weight: bold; }
+    .wins   { color: var(--up); }
+    .losses { color: var(--down); }
+
+    .chart-container {
+      width: 100%;
+      max-width: 700px;
+      height: 300px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 25px;
+      position: relative;
+    }
+
+    #chart {
+      width: 100%;
+      height: 100%;
+    }
+
+    .trading-panel {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 25px;
+      width: 100%;
+      max-width: 500px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    }
+
+    .asset-select, .amount-select, .expiry-select {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+
+    select, input[type="number"] {
+      width: 100%;
+      padding: 12px;
+      background: #0d1117;
+      border: 1px solid var(--border);
+      color: white;
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 15px;
+      margin-top: 25px;
+    }
+
+    button {
+      flex: 1;
+      padding: 16px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    #btnCall {
+      background: var(--up);
+      color: white;
+    }
+
+    #btnPut {
+      background: var(--down);
+      color: white;
+    }
+
+    button:hover {
+      filter: brightness(1.15);
+      transform: translateY(-2px);
+    }
+
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    #result {
+      margin-top: 25px;
+      font-size: 1.4rem;
+      font-weight: bold;
+      text-align: center;
+      min-height: 40px;
+    }
+
+    #history {
+      margin-top: 30px;
+      width: 100%;
+      max-width: 500px;
+    }
+
+    .trade-item {
+      padding: 10px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.95rem;
+    }
+
+    .win  { color: var(--up); }
+    .loss { color: var(--down); }
+
+    footer {
+      margin-top: auto;
+      padding: 30px 0 10px;
+      text-align: center;
+      font-size: 0.85rem;
+      color: #8b949e;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Binary Options Simulator</h1>
+  <p>Démo éducative – Argent virtuel uniquement</p>
+</header>
+
+<div class="stats">
+  <div class="stat">Solde : <span id="balance" class="balance">$10 000</span></div>
+  <div class="stat">Gains : <span id="wins" class="wins">0</span></div>
+  <div class="stat">Pertes : <span id="losses" class="losses">0</span></div>
+</div>
+
+<div class="chart-container">
+  <canvas id="chart"></canvas>
+</div>
+
+<div class="trading-panel">
+  <div class="asset-select">
+    <label>Actif</label>
+    <select id="asset">
+      <option value="EURUSD">EUR/USD</option>
+      <option value="BTCUSD">BTC/USD</option>
+      <option value="GOLD">XAU/USD</option>
+      <option value="AAPL">Apple Inc.</option>
+    </select>
+  </div>
+
+  <div class="amount-select">
+    <label>Montant ($)</label>
+    <input type="number" id="amount" min="10" max="1000" step="10" value="100">
+  </div>
+
+  <div class="expiry-select">
+    <label>Expiration</label>
+    <select id="expiry">
+      <option value="30">30 secondes</option>
+      <option value="60" selected>60 secondes</option>
+      <option value="120">2 minutes</option>
+      <option value="300">5 minutes</option>
+    </select>
+  </div>
+
+  <div class="buttons">
+    <button id="btnCall">CALL ↑</button>
+    <button id="btnPut">PUT ↓</button>
+  </div>
+
+  <div id="result"></div>
+</div>
+
+<div id="history">
+  <h3>Dernières transactions</h3>
+  <div id="historyList"></div>
+</div>
+
+<footer>
+  Simulateur éducatif – Ne tradez jamais avec de l'argent que vous ne pouvez pas perdre.
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+// ────────────────────────────────────────────────
+// Configuration initiale
+// ────────────────────────────────────────────────
+let balance = 10000;
+let wins = 0;
+let losses = 0;
+
+const balanceEl  = document.getElementById('balance');
+const winsEl     = document.getElementById('wins');
+const lossesEl   = document.getElementById('losses');
+const resultEl   = document.getElementById('result');
+const historyList = document.getElementById('historyList');
+
+const btnCall = document.getElementById('btnCall');
+const btnPut  = document.getElementById('btnPut');
+
+// Désactive boutons pendant trade
+function lockButtons() { btnCall.disabled = btnPut.disabled = true; }
+function unlockButtons() { btnCall.disabled = btnPut.disabled = false; }
+
+// Mise à jour affichage
+function updateUI() {
+  balanceEl.textContent = '$' + balance.toLocaleString();
+  winsEl.textContent = wins;
+  lossesEl.textContent = losses;
+}
+
+// ────────────────────────────────────────────────
+// Graphique simple (prix aléatoire réaliste)
+// ────────────────────────────────────────────────
+const ctx = document.getElementById('chart').getContext('2d');
+const chart = new Chart(ctx, {
+  type: 'line',
+  data: {
+    labels: [],
+    datasets: [{
+      label: 'Prix',
+      data: [],
+      borderColor: '#58a6ff',
+      backgroundColor: 'rgba(88, 166, 255, 0.1)',
+      tension: 0.4,
+      pointRadius: 0,
+      borderWidth: 2
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      x: { display: false },
+      y: { display: true, grid: { color: '#30363d' } }
+    },
+    plugins: { legend: { display: false } }
+  }
+});
+
+// Génère un mouvement de prix réaliste
+let currentPrice = 100;
+let prices = [currentPrice];
+let time = 0;
+
+function updateChart() {
+  // Petit bruit + tendance légère aléatoire
+  const change = (Math.random() - 0.48) * 0.8; // biais très léger
+  currentPrice += change;
+  currentPrice = Math.max(50, Math.min(150, currentPrice));
+
+  prices.push(currentPrice);
+  if (prices.length > 60) prices.shift();
+
+  chart.data.labels = prices.map((_,i) => i);
+  chart.data.datasets[0].data = prices;
+  chart.update();
+}
+
+// Mise à jour prix toutes les ~400-800 ms
+setInterval(() => {
+  updateChart();
+  time++;
+}, 600 + Math.random()*400);
+
+// ────────────────────────────────────────────────
+// Logique trading
+// ────────────────────────────────────────────────
+function addHistory(direction, amount, won) {
+  const item = document.createElement('div');
+  item.className = 'trade-item';
+  item.innerHTML = `
+    <span>${direction} • $${amount}</span>
+    <span class="${won ? 'win' : 'loss'}">${won ? '+' : '-'} $${amount}</span>
+  `;
+  historyList.prepend(item);
+
+  // Limite historique affiché
+  if (historyList.children.length > 8) {
+    historyList.removeChild(historyList.lastChild);
+  }
+}
+
+function executeTrade(direction) {
+  const amount = parseInt(document.getElementById('amount').value) || 100;
+  const expirySec = parseInt(document.getElementById('expiry').value) || 60;
+
+  if (amount > balance || amount < 10) {
+    resultEl.textContent = "Montant invalide ou solde insuffisant";
+    resultEl.style.color = "#ff4444";
+    return;
+  }
+
+  if (amount > 1000) {
+    resultEl.textContent = "Montant maximum : $1000 par trade";
+    resultEl.style.color = "#ff4444";
+    return;
+  }
+
+  lockButtons();
+  resultEl.textContent = `Trade ${direction} de $${amount} lancé – expiration dans ${expirySec} s...`;
+  resultEl.style.color = "white";
+
+  // Prix de départ
+  const startPrice = currentPrice;
+
+  setTimeout(() => {
+    // Prix à l'expiration
+    const endPrice = currentPrice;
+
+    let won = false;
+    if (direction === "CALL") {
+      won = endPrice > startPrice;
+    } else { // PUT
+      won = endPrice < startPrice;
+    }
+
+    // Paiement classique 80% (simulé)
+    const payout = Math.round(amount * 1.80);
+    const profit = won ? (payout - amount) : -amount;
+
+    balance += profit;
+    if (won) wins++; else losses++;
+
+    resultEl.textContent = won
+      ? `GAGNÉ ! +$${profit} (solde: $${balance})`
+      : `PERDU –$${amount} (solde: $${balance})`;
+
+    resultEl.style.color = won ? "var(--up)" : "var(--down)";
+
+    addHistory(direction, amount, won);
+    updateUI();
+
+    unlockButtons();
+
+    // Si solde trop bas
+    if (balance < 10) {
+      resultEl.textContent += " → SOLDE INSUFFISANT – Recharge virtuelle nécessaire";
+      lockButtons();
+    }
+  }, expirySec * 1000);
+}
+
+// Événements boutons
+btnCall.onclick = () => executeTrade("CALL");
+btnPut.onclick  = () => executeTrade("PUT");
+
+// Démarrage
+updateUI();
+updateChart(); // premier dessin
+
+</script>
+</body>
+</html>
