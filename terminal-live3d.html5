@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>NETSECUREPRO // NÉO_DZ TERMINAL V7</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+    :root {
+        --crt-green: #00ff41;
+        --crt-dim: #004411;
+        --bg: #000;
+        --text: #00ff41;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: 'Courier New', Courier, monospace;
+        height: 100vh;
+        overflow: hidden;
+        image-rendering: pixelated;
+        position: relative;
+    }
+
+    /* Scanlines CRT */
+    body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background: 
+            repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(0,255,65,0.06) 2px,
+                rgba(0,255,65,0.06) 4px
+            );
+        pointer-events: none;
+        z-index: 9999;
+        animation: scan 10s linear infinite;
+        mix-blend-mode: overlay;
+    }
+    @keyframes scan {
+        0%   { transform: translateY(-100%); }
+        100% { transform: translateY(100%); }
+    }
+
+    /* Vignette CRT + glow */
+    body::after {
+        content: "";
+        position: fixed;
+        inset: 0;
+        box-shadow: inset 0 0 120px rgba(0,0,0,0.9);
+        pointer-events: none;
+        z-index: 9998;
+    }
+
+    #terminal {
+        height: 100vh;
+        padding: 2rem;
+        overflow-y: auto;
+        font-size: 1.1rem;
+        line-height: 1.5;
+        white-space: pre-wrap;
+        position: relative;
+        z-index: 10;
+    }
+
+    .prompt {
+        color: var(--crt-green);
+        font-weight: bold;
+        display: inline;
+    }
+
+    #input {
+        background: transparent;
+        border: none;
+        color: var(--crt-green);
+        font: inherit;
+        outline: none;
+        caret-color: var(--crt-green);
+        width: calc(100% - 140px);
+    }
+
+    .cursor {
+        display: inline-block;
+        width: 10px;
+        height: 1.2em;
+        background: var(--crt-green);
+        animation: blink 1s step-end infinite;
+        vertical-align: middle;
+    }
+
+    @keyframes blink {
+        50% { opacity: 0; }
+    }
+
+    .welcome {
+        color: #0f0;
+        margin-bottom: 1.5rem;
+    }
+
+    .command {
+        color: #0f8;
+    }
+
+    .error {
+        color: #f33;
+    }
+
+    .info {
+        color: #0ff;
+    }
+</style>
+</head>
+<body>
+
+<div id="terminal"></div>
+
+<script>
+// === CONFIG ===
+const terminal = document.getElementById('terminal');
+const history = [];
+let historyIndex = -1;
+
+// === ÉCRAN DE DÉMARRAGE ===
+function bootSequence() {
+    const boot = [
+        "[BOOT] NÉO_KERNEL GEMINI CORE 20.6 PRO V7 - INITIATED...",
+        "[BOOT] Chargement Sceau Souverain... OK",
+        "[BOOT] Authentification ZOUBIROU MOHAMMED ILYES... CONFIRMÉ",
+        "[BOOT] Handler Éthique V1.1 → HASH VALIDATED",
+        "[BOOT] IPI LEAK PROTECTION: 0.00%",
+        "[BOOT] AUC GAIN: +15.0% | REJET CLINICIENS: 2.8%",
+        "[BOOT] Système souverain opérationnel.",
+        "",
+        "Bienvenue, Administrateur.",
+        "Tapez /help pour les commandes disponibles.",
+        ""
+    ];
+
+    let i = 0;
+    const interval = setInterval(() => {
+        if (i < boot.length) {
+            printLine(boot[i]);
+            i++;
+        } else {
+            clearInterval(interval);
+            printPrompt();
+        }
+    }, 80 + Math.random() * 120);
+}
+
+// === FONCTIONS UTILITAIRES ===
+function printLine(text, className = '') {
+    const line = document.createElement('div');
+    line.textContent = text;
+    if (className) line.className = className;
+    terminal.appendChild(line);
+    terminal.scrollTop = terminal.scrollHeight;
+}
+
+function printPrompt() {
+    const promptLine = document.createElement('div');
+    promptLine.innerHTML = '<span class="prompt">root@neo-dz:~# </span><span id="current-input"></span><span class="cursor"></span>';
+    terminal.appendChild(promptLine);
+    terminal.scrollTop = terminal.scrollHeight;
+
+    const inputSpan = document.getElementById('current-input');
+    const input = document.createElement('input');
+    input.id = 'hidden-input';
+    input.type = 'text';
+    input.autofocus = true;
+    input.style.position = 'absolute';
+    input.style.opacity = '0';
+    input.style.width = '1px';
+    input.style.height = '1px';
+    document.body.appendChild(input);
+
+    input.focus();
+
+    input.addEventListener('input', () => {
+        inputSpan.textContent = input.value;
+    });
+
+    input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            const command = input.value.trim();
+            if (command) {
+                printLine(`root@neo-dz:~# ${command}`, 'command');
+                executeCommand(command);
+                history.push(command);
+                historyIndex = history.length;
+            }
+            input.value = '';
+            inputSpan.textContent = '';
+            printPrompt();
+        } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            if (historyIndex > 0) {
+                historyIndex--;
+                input.value = history[historyIndex] || '';
+                inputSpan.textContent = input.value;
+            }
+        } else if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            if (historyIndex < history.length - 1) {
+                historyIndex++;
+                input.value = history[historyIndex] || '';
+                inputSpan.textContent = input.value;
+            } else {
+                historyIndex = history.length;
+                input.value = '';
+                inputSpan.textContent = '';
+            }
+        }
+    });
+}
+
+// === COMMANDES DISPONIBLES ===
+function executeCommand(cmd) {
+    const args = cmd.split(' ');
+    const command = args[0].toLowerCase();
+
+    switch(command) {
+        case '/help':
+            printLine("Commandes disponibles :", 'info');
+            printLine("  /help              - Cette aide");
+            printLine("  /status            - État du système");
+            printLine("  /clear             - Effacer l'écran");
+            printLine("  /neo               - Activation mode matrice profonde");
+            printLine("  /exit              - Fermeture de session (simulation)");
+            printLine("  /whoami            - Identité actuelle");
+            break;
+
+        case '/status':
+            printLine("GEMINI CORE 20.6 PRO V7", 'info');
+            printLine("Handler Éthique V1.1 .......... ACTIF");
+            printLine("Hash d'intégrité .............. 7f8a9b8c7d6e5f4a1d2c3b4a5b2c1d6e");
+            printLine("Fuite IPI ..................... 0.00%");
+            printLine("Gain AUC ...................... +15.0%");
+            printLine("Taux rejet cliniciens ......... 2.8%");
+            printLine("Mode souverain ................ 100%");
+            break;
+
+        case '/clear':
+            terminal.innerHTML = '';
+            break;
+
+        case '/neo':
+            printLine("La matrice s'éveille...", 'info');
+            printLine("Tapez encore.", 'info');
+            break;
+
+        case '/exit':
+            printLine("Session terminée.", 'alert');
+            printLine("Au revoir, Administrateur.", 'info');
+            break;
+
+        case '/whoami':
+            printLine("Administrateur : ZOUBIROU MOHAMMED ILYES", 'info');
+            printLine("ORCID : 0009-0007-7571-3178", 'info');
+            break;
+
+        default:
+            printLine(`Commande inconnue : ${cmd}`, 'error');
+            printLine("Tapez /help pour la liste des commandes.", 'info');
+    }
+}
+
+// === DÉMARRAGE ===
+bootSequence();
+</script>
+</body>
+</html>
