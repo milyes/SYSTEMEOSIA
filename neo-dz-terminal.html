@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>NÉO_DZ • TERMINAL LIVE – GEMINI CORE V7</title>
+<style>
+    :root {
+        --bg: #000000;
+        --neon: #00ff41;
+        --neon-dim: #00aa2a;
+        --text: #e0ffe0;
+        --cursor: #00ff41;
+        --glow: rgba(0, 255, 65, 0.35);
+    }
+
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+        height:100dvh;
+        background:var(--bg);
+        color:var(--text);
+        font-family: 'Courier New', Courier, monospace;
+        font-size: 1.05rem;
+        line-height: 1.38;
+        overflow:hidden;
+    }
+
+    #terminal {
+        height:100%;
+        padding:1.5rem 2rem;
+        overflow-y:auto;
+        scrollbar-width:none;
+        user-select:text;
+    }
+    #terminal::-webkit-scrollbar { display:none; }
+
+    .line {
+        opacity:0;
+        transform:translateY(10px);
+        animation:fadeIn 0.5s forwards;
+        white-space:pre-wrap;
+        word-break:break-word;
+    }
+
+    .prompt {
+        color:var(--neon);
+        text-shadow:0 0 6px var(--glow);
+        user-select:none;
+    }
+
+    .input-line {
+        display:flex;
+        align-items:baseline;
+        gap:0.5em;
+    }
+
+    #input {
+        background:transparent;
+        border:none;
+        outline:none;
+        color:var(--text);
+        font:inherit;
+        flex:1;
+        caret-color:var(--cursor);
+    }
+
+    #cursor {
+        display:inline-block;
+        width:0.7em;
+        height:1.1em;
+        background:var(--cursor);
+        animation:blink 1.2s step-end infinite;
+        vertical-align:middle;
+    }
+
+    .glow { text-shadow:0 0 8px var(--glow), 0 0 16px var(--glow); }
+    .dim   { color:var(--neon-dim); }
+    .error { color:#ff3366; text-shadow:0 0 6px #ff3366aa; }
+
+    @keyframes fadeIn { to { opacity:1; transform:translateY(0); } }
+    @keyframes blink   { 50% { opacity:0; } }
+
+    @media (max-width:640px) {
+        body { font-size:0.95rem; }
+        #terminal { padding:0.8rem 1.2rem; }
+    }
+</style>
+</head>
+<body>
+
+<div id="terminal"></div>
+
+<script>
+// ──────────────────────────────────────────────────────────────
+const term = document.getElementById('terminal');
+const history = [];
+let historyIndex = -1;
+
+const boot = [
+    " ",
+    "  ╔════════════════════════════════════╗",
+    "  ║        NÉO_DZ  •  TERMINAL LIVE    ║",
+    "  ║     GEMINI CORE 20.6 PRO V7        ║",
+    "  ╚════════════════════════════════════╝",
+    " ",
+    "  Initialisation noyau souverain... OK",
+    "  Handler Éthique V1.1 → hash 7f8a9b8c7d6e5f4a1d2c3b4a5b2c1d6e",
+    "  Sceau ORCID 0009-0007-7571-3178 → VALIDÉ",
+    "  Tunnel NÉO_DZ sécurisé → latence 32ms",
+    "  Mode réel + auto-évolution activé",
+    " ",
+    "  Bienvenue, Architecte Suprême.",
+    "  Tapez help pour les commandes",
+    " "
+];
+
+function add(text = "", cls = "") {
+    const el = document.createElement("div");
+    el.className = "line " + cls;
+    el.innerHTML = text;
+    term.appendChild(el);
+    term.scrollTop = term.scrollHeight;
+    setTimeout(() => el.style.opacity = "1", 30);
+}
+
+function bootSequence() {
+    let i = 0;
+    function next() {
+        if (i < boot.length) {
+            add(boot[i], i < 6 ? "dim" : "glow");
+            i++;
+            setTimeout(next, i < 6 ? 220 : 90);
+        } else {
+            add("");
+            createInput();
+        }
+    }
+    next();
+}
+
+function createInput() {
+    const line = document.createElement("div");
+    line.className = "input-line";
+
+    const p = document.createElement("span");
+    p.className = "prompt glow";
+    p.textContent = "NÉO_DZ@CORE_V7:~$ ";
+
+    const input = document.createElement("input");
+    input.autofocus = true;
+    input.spellcheck = false;
+
+    const cursor = document.createElement("span");
+    cursor.id = "cursor";
+
+    line.append(p, input, cursor);
+    term.appendChild(line);
+    term.scrollTop = term.scrollHeight;
+    input.focus();
+
+    input.addEventListener("keydown", e => {
+        if (e.key === "Enter") {
+            e.preventDefault();
+            const cmd = input.value.trim();
+            if (cmd) {
+                history.push(cmd);
+                historyIndex = history.length;
+                add(`<span class="prompt glow">NÉO_DZ@CORE_V7:~$</span> ${cmd}`);
+                execute(cmd);
+            }
+            line.remove();
+            createInput();
+            input.value = "";
+        }
+        else if (e.key === "ArrowUp") {
+            e.preventDefault();
+            if (historyIndex > 0) {
+                historyIndex--;
+                input.value = history[historyIndex] || "";
+            }
+        }
+        else if (e.key === "ArrowDown") {
+            e.preventDefault();
+            if (historyIndex < history.length - 1) {
+                historyIndex++;
+                input.value = history[historyIndex];
+            } else {
+                historyIndex = history.length;
+                input.value = "";
+            }
+        }
+    });
+}
+
+function execute(cmd) {
+    const c = cmd.toLowerCase().trim();
+
+    if (c === "help" || c === "?") {
+        add("Commandes disponibles :", "glow");
+        add("  help, ?        → cette aide");
+        add("  status         → état du noyau");
+        add("  auth           → identité & sceau");
+        add("  clear, cls     → effacer l'écran");
+        add("  go             → signal souverain");
+        add("  scan           → scan rapide simulé");
+        add("  version        → version noyau");
+    }
+    else if (c === "status") {
+        add("Noyau .............. GEMINI CORE 20.6 PRO V7", "glow");
+        add("Gain AUC ........... +15%");
+        add("Handler Éthique .... actif (100% IPI)");
+        add("Mode ............... RÉEL + AUTO-ÉVOLUTIF");
+    }
+    else if (c === "auth") {
+        add("Auteur ............. Zoubirou Mohammed Ilyes");
+        add("ORCID .............. 0009-0007-7571-3178");
+        add("Statut sceau ....... VALIDÉ");
+    }
+    else if (c === "go") {
+        add("NÉO_DZ_$_> GO ────────────────────────────────", "glow");
+        add("Souveraineté. Traçabilité. Action.");
+    }
+    else if (c === "scan") {
+        add("Scan multimodal en cours...", "glow");
+        setTimeout(() => add("Aucun signal faible détecté", "glow"), 1400);
+    }
+    else if (c === "clear" || c === "cls") {
+        term.innerHTML = "";
+        bootSequence();
+        return;
+    }
+    else if (c === "version") {
+        add("GEMINI CORE 20.6 PRO V7 – 2026 build");
+    }
+    else if (c) {
+        add(`Commande inconnue : ${cmd}`, "error");
+        add("Tapez help pour la liste");
+    }
+}
+
+// Démarrage
+bootSequence();
+</script>
+</body>
+</html>
