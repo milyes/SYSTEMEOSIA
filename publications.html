@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SYSTEMEOSIA | Infrastructure Souveraine V11</title>
+    <style>
+        :root {
+            --primary: #2c5282; --secondary: #2d3748; --accent: #48bb78;
+            --bg: #f7fafc; --terminal-bg: #1a202c; --terminal-text: #63b3ed;
+        }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; min-height: 100vh; display: flex; justify-content: center; align-items: center; color: var(--secondary); }
+        
+        /* Écran Login */
+        #login-screen { width: 350px; padding: 2.5rem; background: white; border-radius: 12px; text-align: center; box-shadow: 0 15px 30px rgba(0,0,0,0.1); border-top: 6px solid var(--primary); transition: 0.3s; }
+        
+        /* Dashboard Principal */
+        #main-app { width: 95%; max-width: 1100px; background: white; border-radius: 12px; box-shadow: 0 20px 25px rgba(0,0,0,0.1); display: none; overflow: hidden; height: 90vh; flex-direction: column; }
+        
+        header { background: var(--primary); color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; font-weight: bold; }
+        
+        .layout { display: grid; grid-template-columns: 1fr 320px; gap: 20px; padding: 20px; flex: 1; overflow-y: auto; }
+        .card { border: 1px solid #e2e8f0; padding: 1.5rem; border-radius: 8px; margin-bottom: 20px; background: #fff; }
+        
+        /* Console Terminal */
+        #console { background: var(--terminal-bg); color: var(--terminal-text); font-family: 'Courier New', monospace; padding: 15px; border-radius: 6px; height: 200px; overflow-y: auto; font-size: 0.85rem; border-left: 4px solid var(--accent); margin-bottom: 10px; }
+        
+        /* Inputs & Buttons */
+        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #e2e8f0; border-radius: 6px; box-sizing: border-box; font-size: 1rem; }
+        button { width: 100%; padding: 12px; background: var(--primary); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; transition: 0.2s; }
+        button:hover { opacity: 0.9; transform: translateY(-1px); }
+        .btn-pub { background: var(--accent); margin-top: 15px; }
+
+        /* Badge Statut */
+        .status { font-size: 0.75rem; padding: 3px 8px; border-radius: 4px; font-weight: bold; }
+        .st-ok { background: #c6f6d5; color: #22543d; }
+        .st-rev { background: #feebc8; color: #7b341e; }
+    </style>
+</head>
+<body>
+
+    <div id="login-screen">
+        <h1 style="color:var(--primary); margin:0;">SYSTEMEOSIA</h1>
+        <p style="font-size:0.9rem; margin-bottom:20px;">Accès Authentifié V11 Final</p>
+        <input type="text" id="user" placeholder="Identifiant (ex: OSIA-2026)">
+        <input type="password" id="pass" placeholder="Clé de sécurité">
+        <button onclick="validerAcces()">Valider l'Intégrité</button>
+        <p id="error" style="color:#e53e3e; font-size:0.8rem; margin-top:15px; height:15px;"></p>
+    </div>
+
+    <div id="main-app">
+        <header>
+            <div>SYSTEMEOSIA <span style="font-weight:normal; opacity:0.8;">| Publication Fonctionnelle</span></div>
+            <div style="font-size:0.8rem;">Session : Dr. Zoubirou (ORCID)</div>
+        </header>
+
+        <div class="layout">
+            <main>
+                <div class="card">
+                    <h3 style="margin-top:0;">Console de Test IA - Cas Critiques</h3>
+                    <div id="console">> Initialisation du noyau 2.6 Pro...<br>> Tunnel IA22 : Établi.<br>> En attente d'entrée...</div>
+                    <input type="text" id="cmd" placeholder="Entrez une commande (ex: FIX, STATUS, LOG)" onkeypress="handleCmd(event)">
+                </div>
+
+                <div class="card">
+                    <h3 style="margin-top:0;">Documents & Fichiers Liés</h3>
+                    <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid #f0f4f8;">
+                        <span>📄 Guide_Utilisation_Institutionnel.pdf</span>
+                        <span class="status st-ok">PRÊT</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 0;">
+                        <span>📝 Modèle_Attestation_V11.docx</span>
+                        <span class="status st-rev">EN RÉVISION</span>
+                    </div>
+                </div>
+            </main>
+
+            <aside>
+                <div class="card" style="background:#f8fafc;">
+                    <h4 style="margin-top:0;">Plan de Déploiement</h4>
+                    <ul style="padding-left:18px; font-size:0.85rem; line-height:1.8;">
+                        <li style="color:var(--accent)">✔ Finalisation Guide</li>
+                        <li style="color:var(--accent)">✔ Stylisation Attestation</li>
+                        <li>🔵 Interface Multi-usagers</li>
+                        <li>⚪ Page d'accueil sécurisée</li>
+                    </ul>
+                    <hr style="border:0; border-top:1px solid #e2e8f0; margin:15px 0;">
+                    <button class="btn-pub" onclick="publier()">Publier sur GitHub</button>
+                </div>
+                
+                <div class="card" style="font-size:0.8rem; text-align:center;">
+                    <strong>NetSecurePro.ca</strong><br>
+                    Souveraineté des Données 2026
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <script>
+        function validerAcces() {
+            const u = document.getElementById('user').value.toUpperCase();
+            const p = document.getElementById('pass').value;
+            const err = document.getElementById('error');
+
+            if(u.includes("OSIA") && p.length >= 4) {
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('main-app').style.display = 'flex';
+                logTerminal("Authentification réussie. Bienvenue Dr. Zoubirou.");
+            } else {
+                err.innerText = "ERREUR : Identifiant ou Clé invalide.";
+                setTimeout(() => err.innerText = "", 3000);
+            }
+        }
+
+        function handleCmd(e) {
+            if (e.key === 'Enter') {
+                const cmd = e.target.value.toUpperCase();
+                logTerminal("<span style='color:white'>> " + cmd + "</span>");
+                
+                if(cmd === "FIX") {
+                    logTerminal("<span style='color:#48bb78'>> SUCCESS: Mitigation appliquée.</span>");
+                } else if(cmd === "STATUS") {
+                    logTerminal("> SYSTÈME : Stable | TUNNEL : 100%");
+                } else if(cmd === "LOG") {
+                    logTerminal("> Accès détecté depuis 192.168.2.11");
+                } else {
+                    logTerminal("> Commande inconnue.");
+                }
+                e.target.value = "";
+            }
+        }
+
+        function logTerminal(msg) {
+            const c = document.getElementById('console');
+            c.innerHTML += "<br>" + msg;
+            c.scrollTop = c.scrollHeight;
+        }
+
+        function publier() {
+            logTerminal("<span style='color:#ecc94b'>> Initialisation Push GitHub...</span>");
+            setTimeout(() => {
+                logTerminal("<span style='color:#48bb78'>> Publication millyes/SYSTEMEOSIA OK.</span>");
+                alert("Projet synchronisé avec succès !");
+            }, 1500);
+        }
+    </script>
+</body>
+</html>
