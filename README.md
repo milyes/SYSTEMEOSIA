@@ -1,56 +1,24 @@
-# 🧠 ORBITRON_IA — Capsule Cockpit SYSTEMEOSIA
+# SYSTEMEOSIA
 
-Bienvenue dans le cockpit souverain `ORBITRON_IA`, activé par **Zoubirou Mohammed Ilyes**  
-📜 Signature : `DZROUGE` | 🔗 ORCID : `0009-0007-7571-3178`  
-🛡️ Statut : ACTIVATED | 📅 Timestamp : `2025-10-07T14:52:00Z`
+Capsules visuelles et manifeste IA22 — NetSecurePro IA.
+Prototype. Pas une certification réglementaire. Pas un LMS déployé.
 
----
+## Contenu réel
 
-## 🔁 Modules cockpit activés
+- Architecture : `SYSTEMEOSIA/IA22_architecture.md`
+- Scellé local SHA-256 : `SYSTEMEOSIA/install.sh` et `SYSTEMEOSIA/seal_history.log`
+- Pages HTML à la racine : maquettes / cockpits
+- `SYSTEMEOSIA/attestation/` et `SYSTEMEOSIA/docs/` : fichiers prévus, encore vides
 
-- 📂 `activated/`
-- 📡 `github_signals/`
-- 📜 `audit_ia22.log`
-- 📡 `signaux/`
+## Auteur
 
----
+Mohammed Ilyes Zoubirou  
+ORCID : 0009-0007-7571-3178  
+milyes@netsecurepro.ca
 
-## 🧪 Rituels exécutés
+## Archive (7 octobre 2025)
 
-- Audit Symbolique IA22  
-- Signal Multisite  
-- Scellage SHA256  
-- QR Manifest Integration  
+Ancien cartouche ORBITRON_IA : statut DECLARE, pas ACTIVATED.
+Les dossiers `activated/`, `github_signals/` et `signaux/` ne sont pas dans ce clone.
 
----
 
-## 🏅 Badge SVG
-
-![Badge ORBITRON_IA](ORBITRON_IA.svg)
-
----
-
-## 📸 QR vers capsule visuelle
-
-![QR vers capsule](qr_orbitron.png)  
-🔗 [Accéder à la capsule cockpit](https://milyes.github.io/SYSTEMEOSIA/index_orbitron.html)
-
----
-
-## 📜 Manifest JSON
-
-```json
-{
-  "module": "ORBITRON_IA",
-  "author": "Zoubirou Mohammed Ilyes",
-  "orcid": "0009-0007-7571-3178",
-  "signature": "DZROUGE",
-  "timestamp": "2025-10-07T14:52:00Z",
-  "status": "🛡️ ACTIVATED",
-  "rituals": [
-    "Audit Symbolique IA22",
-    "Signal Multisite",
-    "Scellage SHA256",
-    "QR Manifest Integration"
-  ]
-}
