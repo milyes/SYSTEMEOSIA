@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>NÉO IA22 - Interface de Visualisation 3D</title>
+    <style>
+        :root {
+            --neon-cyan: #00ffff;
+            --neon-pink: #ff0055;
+            --terminal-bg: #050505;
+            --grid-color: #1a1a1a;
+        }
+
+        body {
+            background-color: #000;
+            color: var(--neon-cyan);
+            font-family: 'Courier New', Courier, monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .terminal-container {
+            width: 800px;
+            background-color: var(--terminal-bg);
+            border: 1px solid var(--neon-cyan);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+            padding: 20px;
+            position: relative;
+        }
+
+        .header {
+            border-bottom: 1px solid var(--neon-cyan);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+        }
+
+        .svg-viewport {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            background: radial-gradient(circle, #111 0%, #000 100%);
+            border: 1px solid #333;
+        }
+
+        .data-panel {
+            margin-top: 20px;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .status-active {
+            color: #0f0;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+
+        .glitch-text {
+            text-transform: uppercase;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="terminal-container">
+    <div class="header">
+        <div>CORE: GEMINI 20.6 PRO V7 // IA22</div>
+        <div>SOUVERAIN: Zoubirou Mohammed Ilyes</div>
+        <div>HASH: 7f8a9b8c...1d6e</div>
+    </div>
+
+    <div class="glitch-text" style="margin-bottom: 10px;">> 3D_SPATIAL_LOGIC_PROJECTION</div>
+
+    <div class="svg-viewport">
+        <!-- INJECTION DU MODULE SVG -->
+        <svg viewBox="0 0 400 400" width="400" height="400" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+                    <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#222" stroke-width="1"/>
+                </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#grid)" />
+            
+            <!-- Axes -->
+            <line x1="200" y1="20" x2="200" y2="380" stroke="#333" stroke-width="1" />
+            <line x1="20" y1="200" x2="380" y2="200" stroke="#333" stroke-width="1" />
+
+            <!-- Sphère (Projection) -->
+            <circle cx="200" cy="200" r="150" fill="rgba(0, 255, 255, 0.05)" stroke="#00ffff" stroke-width="2" stroke-dasharray="5,5" />
+            
+            <!-- Point P(1, 2, 3) -->
+            <circle cx="230" cy="140" r="4" fill="#ff0055">
+                <animate attributeName="r" values="3;5;3" dur="2s" repeatCount="indefinite" />
+            </circle>
+            <line x1="200" y1="200" x2="230" y2="140" stroke="#ff0055" stroke-width="1" stroke-dasharray="2,2" />
+            
+            <text x="240" y="135" fill="#ff0055" font-family="monospace" font-size="11">P(1, 2, 3)</text>
+            <text x="50" y="50" fill="#00ffff" font-family="monospace" font-size="10">MODULE: SPATIAL_PROJECTION_V2.1</text>
+        </svg>
+    </div>
+
+    <div class="data-panel">
+        <div>[CALCUL] DIST_SURFACE: -1.258342 (INTERNE)</div>
+        <div>[LOGIC] POSITION: DANS_VOLUME_SPHÉRIQUE</div>
+        <div>[STATUT] <span class="status-active">INTÉGRITÉ_CONFIRMÉE_100%</span></div>
+    </div>
+</div>
+
+</body>
+</html>

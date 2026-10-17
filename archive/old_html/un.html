@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>IA22_IA_TERMUXTOOLKIT</title>
+  <style>
+    body {
+      font-family: 'Courier New', monospace;
+      background-color: #0f0f0f;
+      color: #00ff99;
+      padding: 2em;
+    }
+    .terminal {
+      background-color: #1a1a1a;
+      border: 2px solid #00ff99;
+      padding: 1em;
+      border-radius: 8px;
+      box-shadow: 0 0 10px #00ff99;
+    }
+    .command {
+      color: #ffffff;
+      font-weight: bold;
+      margin-bottom: 1em;
+    }
+    .status {
+      margin-top: 1em;
+      padding: 0.5em;
+      background-color: #002f1f;
+      border-left: 5px solid #00ff99;
+    }
+    .timestamp {
+      font-size: 0.9em;
+      color: #cccccc;
+    }
+    button {
+      background-color: #00ff99;
+      color: #0f0f0f;
+      border: none;
+      padding: 0.5em 1em;
+      font-weight: bold;
+      cursor: pointer;
+      border-radius: 4px;
+      margin-top: 1em;
+    }
+    button:hover {
+      background-color: #00cc77;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🛠️ IA22_IA_TERMUXTOOLKIT</h1>
+
+  <div class="terminal">
+    <div class="command">
+      IA22_IA_TERMUXTOOLKIT$ pkg update && pkg upgrade -y && pkg install -y git curl wget proot-distro tsu openssl sqlite clang build-essential && echo "[✔] IA22 TERMUX TOOLKIT INIT – $(date)" || echo "[✘] Échec d’installation"
+    </div>
+    <button onclick="runToolkit()">Exécuter l'Initialisation</button>
+    <div class="status" id="statusBlock">
+      <p>🕒 En attente d'exécution...</p>
+      <p class="timestamp">Horodatage : <span id="timestamp"></span></p>
+    </div>
+  </div>
+
+  <script>
+    function runToolkit() {
+      const status = document.getElementById('statusBlock');
+      const timestamp = document.getElementById('timestamp');
+      const now = new Date().toLocaleString();
+      timestamp.textContent = now;
+      status.innerHTML = `
+        <p>✅ Initialisation simulée du toolkit IA22 dans Termux.</p>
+        <p class="timestamp">Horodatage : ${now}</p>
+      `;
+    }
+  </script>
+
+</body>
+</html>

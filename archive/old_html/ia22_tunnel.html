@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NÉO IA22 — TUNNEL SOUVERAIN</title>
+    <style>
+        :root {
+            --neon-cyan: #00ffff;
+            --neon-magenta: #ff00ff;
+            --bg: #000;
+        }
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            background: var(--bg);
+            font-family: 'Courier New', monospace;
+            color: var(--neon-cyan);
+        }
+        #tunnel {
+            position: fixed;
+            inset: 0;
+            perspective: 1200px;
+            transform-style: preserve-3d;
+        }
+        .tunnel-layer {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at center, #0a1a1a 0%, #000 70%);
+            animation: tunnelMove 18s linear infinite;
+        }
+        .layer-1 { animation-duration: 12s; opacity: 0.8; }
+        .layer-2 { animation-duration: 18s; opacity: 0.6; transform: translateZ(-200px); }
+        .layer-3 { animation-duration: 24s; opacity: 0.4; transform: translateZ(-400px); }
+        @keyframes tunnelMove {
+            0% { transform: translateZ(0) rotateX(0deg); }
+            100% { transform: translateZ(-2000px) rotateX(360deg); }
+        }
+        .overlay {
+            position: absolute;
+            inset: 20px;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            z-index: 10;
+        }
+        .header { font-size: 1.1rem; text-shadow: 0 0 10px var(--neon-cyan); }
+        .status { color: var(--neon-magenta); animation: blink 1.2s infinite; }
+        @keyframes blink { 50% { opacity: 0.4; } }
+    </style>
+</head>
+<body>
+
+<div id="tunnel">
+    <div class="tunnel-layer layer-1"></div>
+    <div class="tunnel-layer layer-2"></div>
+    <div class="tunnel-layer layer-3"></div>
+</div>
+
+<div class="overlay">
+    <div class="header">
+        NÉO IA22 — TUNNEL SOUVERAIN<br>
+        SOUVERAIN : Zoubirou Mohammed Ilyes
+    </div>
+    <div class="status">
+        [STATUS] → TRAVERSÉE 7D EN COURS<br>
+        INTÉGRITÉ : 100% | HASH : 7f8a9b8c...
+    </div>
+</div>
+
+</body>
+</html>
